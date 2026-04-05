@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import EventTypesPage from './pages/EventTypesPage'
-import BookingPage from './pages/BookingPage'
-import DashboardPage from './pages/DashboardPage'
-import GuestPage from './pages/GuestPage'
+import { EventTypesPage } from './pages/EventTypesPage'
+import { BookingPage } from './pages/BookingPage'
+import { DashboardPage } from './pages/DashboardPage'
+import { GuestPage } from './pages/GuestPage'
 
 const queryClient = new QueryClient()
 

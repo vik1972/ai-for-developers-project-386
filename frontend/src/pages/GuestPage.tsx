@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Card,
@@ -125,7 +125,7 @@ export function GuestPage() {
           <Badge color="green" variant="light">
             {events.length} доступно
           </Badge>
-        </div>
+        </Group>
 
         {loading && <Loader mb="md" />}
 
