@@ -39,11 +39,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ], require: "debug/prelude"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-<<<<<<< HEAD
-  gem "brakeman", require: false
-=======
   gem "brakeman", ">= 8.0.4", require: false
->>>>>>> f1c268fc567092d4cfc36a6e312cfd096ebcb8f3
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
@@ -52,18 +48,13 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-<<<<<<< HEAD
 
   # Highlight the fine-grained location where an error occurred [https://github.com/ruby/error_highlight]
   gem "error_highlight", ">= 0.4.0", platforms: [ :ruby ]
 end
 
-=======
-end
-
 gem "rack-cors", "~> 2.0"
 
->>>>>>> f1c268fc567092d4cfc36a6e312cfd096ebcb8f3
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
