@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event_id: 1
+  slot: 2026-04-05 10:23:10
+
+two:
+  event_id: 1
+  slot: 2026-04-05 10:23:10

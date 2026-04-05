@@ -1,0 +1,12 @@
+{
+  "name": "calendar-api-typespec",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate": "tsp compile calendar-api.tsp --emit @typespec/openapi3 --output calendar-api.json",
+    "types": "tsp compile calendar-api.tsp --emit @typespec/csharp --output types"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^0.67.2"
+  }
+}
