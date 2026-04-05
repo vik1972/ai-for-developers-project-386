@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Group, Card, Title, Text, Loader, Alert } from '@mantine/core'
 import { Plus, Home } from 'lucide-react'
 import { EventCard } from '../components/EventCard'
@@ -53,7 +53,7 @@ export function EventTypesPage() {
 
       {events.length === 0 ? (
         <Card p="lg" withBorder>
-          <Text c="dimmed" align="center">
+          <Text c="dimmed" style={{ textAlign: 'center' }}>
             Типы событий еще не созданы. Создайте первый тип события для начала работы.
           </Text>
         </Card>

@@ -6,7 +6,7 @@ import type { AvailableSlotsResponse } from '../types/api'
 interface TimeSlotGridProps {
   availableSlots: string[]
   onSlotSelect: (slot: string) => void
-  selectedSlot?: string
+  selectedSlot?: string | null
   loading?: boolean
 }
 

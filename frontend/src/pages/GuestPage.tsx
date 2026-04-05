@@ -137,7 +137,7 @@ export function GuestPage() {
 
         {events.length === 0 ? (
           <Card p="lg" withBorder>
-            <Text c="dimmed" align="center" size="lg">
+            <Text c="dimmed" size="lg" style={{ textAlign: 'center' }}>
               В настоящее время нет доступных событий для бронирования.
               Пожалуйста, вернитесь позже.
             </Text>

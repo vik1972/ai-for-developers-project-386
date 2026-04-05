@@ -12,14 +12,14 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     # Public routes for guests
-    namespace :public do
+    scope "public" do
       get "events", to: "public#events"
       get "events/:id", to: "public#event"
       post "bookings", to: "public#create_booking"
     end
 
     # Owner routes
-    namespace :owner do
+    scope "owner" do
       get "dashboard", to: "owner#dashboard"
       get "bookings", to: "owner#bookings"
       post "events", to: "owner#create_event"

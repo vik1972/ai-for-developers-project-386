@@ -22,7 +22,7 @@ import {
   Trash2,
   Plus,
   Users,
-  Event as EventIcon
+  CalendarDays as EventIcon
 } from 'lucide-react'
 import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
@@ -179,7 +179,7 @@ export function DashboardPage() {
         </Group>
         
         {events.length === 0 ? (
-          <Text c="dimmed" align="center" py="lg">
+          <Text c="dimmed" style={{ textAlign: 'center' }} py="lg">
             Типы событий еще не созданы
           </Text>
         ) : (
@@ -218,7 +218,7 @@ export function DashboardPage() {
         </Group>
         
         {upcomingBookings.length === 0 ? (
-          <Text c="dimmed" align="center" py="lg">
+          <Text c="dimmed" style={{ textAlign: 'center' }} py="lg">
             Нет предстоящих встреч
           </Text>
         ) : (
