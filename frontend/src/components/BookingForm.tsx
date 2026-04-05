@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Button, TextInput, Text, Alert, Card, Group } from '@mantine/core'
-import { Calendar, Check } from 'lucide-react'
+import { Calendar, Check, AlertCircle } from 'lucide-react'
 import type { CreateBookingDto } from '../types/api'
 import { useBookingsStore } from '../store/bookings'
 
@@ -24,7 +24,7 @@ export function BookingForm({
   onSuccess, 
   onCancel 
 }: BookingFormProps) {
-  const { createBooking, loading } = useBookingsStore()
+  const { createBooking, loading, error } = useBookingsStore()
   
   const form = useForm({
     initialValues: {
@@ -42,16 +42,16 @@ export function BookingForm({
   const handleSubmit = async (values: any) => {
     if (!selectedSlot) return
 
+    const bookingData: CreateBookingDto = {
+      event_id: eventId,
+      slot: selectedSlot,
+    }
+    
     try {
-      const bookingData: CreateBookingDto = {
-        event_id: eventId,
-        slot: selectedSlot,
-      }
-      
       await createBooking(bookingData)
       onSuccess()
-    } catch (error) {
-      // Error is handled by the store
+    } catch (e) {
+      // Error is handled by the store and displayed in UI
     }
   }
 
@@ -69,6 +69,15 @@ export function BookingForm({
             <span>
               Выбрано: {new Date(selectedSlot).toLocaleString('ru-RU')}
             </span>
+          </Group>
+        </Alert>
+      )}
+
+      {error && (
+        <Alert mb="lg" color="red" variant="light">
+          <Group gap="xs">
+            <AlertCircle size={16} />
+            <span>{error}</span>
           </Group>
         </Alert>
       )}

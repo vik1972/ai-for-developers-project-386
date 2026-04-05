@@ -27,38 +27,56 @@ export function BookingPage() {
   const { fetchBookings } = useBookingsStore()
   
   const [event, setEvent] = useState<Event | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
+  const [occupiedSlots, setOccupiedSlots] = useState<string[]>([])
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     return new Date().toISOString().split('T')[0]
   })
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [slotsLoading, setSlotsLoading] = useState(false)
   const [showBookingForm, setShowBookingForm] = useState(false)
 
   useEffect(() => {
-    const eventId = parseInt(id || '0')
-    if (eventId) {
-      const foundEvent = events.find(e => e.id === eventId)
-      if (foundEvent) {
-        setEvent(foundEvent)
-      } else {
-        eventsApi.getById(eventId).then(setEvent)
-      }
+    fetchEvents().then(() => setLoading(false))
+  }, [fetchEvents])
+
+  useEffect(() => {
+    if (!id) return
+    
+    const eventIdNum = parseInt(id)
+    if (!eventIdNum || isNaN(eventIdNum)) {
+      setError('Invalid event ID')
+      return
+    }
+    
+    const foundEvent = events.find(e => e.id === eventIdNum)
+    if (foundEvent) {
+      setEvent(foundEvent)
+    } else {
+      eventsApi.getById(eventIdNum)
+        .then(setEvent)
+        .catch(err => {
+          console.error('Failed to fetch event:', err)
+          setError('Failed to load event')
+        })
     }
   }, [id, events])
 
   useEffect(() => {
     if (event && selectedDate) {
-      setLoading(true)
+      setSlotsLoading(true)
       bookingsApi.getAvailableSlots(event.id, selectedDate)
         .then((data: AvailableSlotsResponse) => {
           setAvailableSlots(data.available_slots)
+          setOccupiedSlots(data.occupied_slots || [])
           setSelectedSlot(null)
         })
         .catch(() => {
           setAvailableSlots([])
         })
-        .finally(() => setLoading(false))
+        .finally(() => setSlotsLoading(false))
     }
   }, [event, selectedDate])
 
@@ -87,10 +105,30 @@ export function BookingPage() {
     return `${mins}м`
   }
 
-  if (!event) {
+  if (loading) {
     return (
       <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
         <Loader />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <Alert color="red" mb="md">
+          {error}
+        </Alert>
+        <Button component={Link} to="/">Вернуться на главную</Button>
+      </div>
+    )
+  }
+
+  if (!event) {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <Alert color="yellow">Событие не найдено</Alert>
+        <Button component={Link} to="/" mt="md">Вернуться на главную</Button>
       </div>
     )
   }
@@ -159,9 +197,10 @@ export function BookingPage() {
 
           <TimeSlotGrid
             availableSlots={availableSlots}
+            occupiedSlots={occupiedSlots}
             onSlotSelect={handleSlotSelect}
             selectedSlot={selectedSlot}
-            loading={loading}
+            loading={slotsLoading}
           />
         </>
       )}

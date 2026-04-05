@@ -1,4 +1,6 @@
 class Api::PublicController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   # Get all public event types for guests
   def events
     @events = Event.all.includes(:owner)
@@ -25,6 +27,6 @@ class Api::PublicController < ApplicationController
   private
 
   def booking_params
-    params.require(:booking).permit(:event_id, :slot)
+    params.permit(:event_id, :slot)
   end
 end

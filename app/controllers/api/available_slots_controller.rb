@@ -33,6 +33,9 @@ class Api::AvailableSlotsController < ApplicationController
       current_time += 30.minutes
     end
 
-    render json: { available_slots: available_slots }
+    render json: {
+      available_slots: available_slots,
+      occupied_slots: occupied_slots.map { |s| s.strftime("%Y-%m-%d %H:%M") }
+    }
   end
 end

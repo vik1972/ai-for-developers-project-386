@@ -17,7 +17,18 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      throw new Error(error.response.data.error || 'API Error')
+      const data = error.response.data
+      if (typeof data === 'string') {
+        throw new Error(data)
+      }
+      if (Array.isArray(data)) {
+        throw new Error(data.join(', '))
+      }
+      if (typeof data === 'object') {
+        const messages = Object.values(data).flat().join(', ')
+        throw new Error(messages || 'API Error')
+      }
+      throw new Error(data.error || 'API Error')
     }
     throw error
   },
