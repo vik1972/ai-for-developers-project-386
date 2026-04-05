@@ -83,7 +83,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.23.0)
       msgpack (~> 1.2)
-    brakeman (7.1.1)
+    brakeman (8.0.4)
       racc
     builder (3.3.0)
     capybara (3.40.0)
@@ -309,7 +309,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  brakeman
+  brakeman (>= 8.0.4)
   capybara
   debug
   importmap-rails
@@ -327,4 +327,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   2.5.16
+  4.0.9
