@@ -4,12 +4,12 @@ import type { Booking, CreateBookingDto, AvailableSlotsResponse } from '../types
 export const bookingsApi = {
   // Guest endpoints
   create: async (data: CreateBookingDto): Promise<Booking> => {
-    const response = await apiClient.post('/api/public/bookings', data)
+    const response = await apiClient.post('/public/bookings', data)
     return response.data
   },
 
   getAvailableSlots: async (eventId: number, date: string): Promise<AvailableSlotsResponse> => {
-    const response = await apiClient.get('/api/available_slots', {
+    const response = await apiClient.get('/available_slots', {
       params: { event_id: eventId, date }
     })
     return response.data
@@ -17,11 +17,11 @@ export const bookingsApi = {
 
   // Owner endpoints
   getAll: async (): Promise<Booking[]> => {
-    const response = await apiClient.get('/api/owner/bookings')
+    const response = await apiClient.get('/owner/bookings')
     return response.data
   },
 
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/api/owner/bookings/${id}`)
+    await apiClient.delete(`/owner/bookings/${id}`)
   },
 }
