@@ -22,7 +22,7 @@ import {
   Trash2,
   Plus,
   Users,
-  Event as EventIcon
+  CalendarDays
 } from 'lucide-react'
 import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
@@ -139,7 +139,7 @@ export function DashboardPage() {
         <Grid.Col span={4}>
           <Card p="md" withBorder>
             <Group>
-              <EventIcon size={24} color="blue" />
+              <CalendarDays size={24} color="blue" />
               <div>
                 <Text size="lg" fw={600}>{totalEvents}</Text>
                 <Text size="sm" c="dimmed">Типов событий</Text>

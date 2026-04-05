@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { 
   Card, 
   Title, 
   Text, 
   Button, 
   Loader, 
-  Alert, 
   Group, 
   Badge,
   Divider
 } from '@mantine/core'
-import { ArrowLeft, Calendar, Clock } from 'lucide-react'
+import { ArrowLeft, Clock } from 'lucide-react'
 import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
 import { TimeSlotGrid } from '../components/TimeSlotGrid'
@@ -21,13 +20,13 @@ import { useBookingsStore } from '../store/bookings'
 import type { Event, AvailableSlotsResponse } from '../types/api'
 
 export function BookingPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { events, fetchEvents } = useEventsStore()
+  const { eventId } = useParams<{ eventId: string }>()
+  const { events } = useEventsStore()
   const { fetchBookings } = useBookingsStore()
   
   const [event, setEvent] = useState<Event | null>(null)
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
+  const [occupiedSlots, setOccupiedSlots] = useState<string[]>([])
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     return new Date().toISOString().split('T')[0]
   })
@@ -36,16 +35,16 @@ export function BookingPage() {
   const [showBookingForm, setShowBookingForm] = useState(false)
 
   useEffect(() => {
-    const eventId = parseInt(id || '0')
-    if (eventId) {
-      const foundEvent = events.find(e => e.id === eventId)
+    const eventIdNum = parseInt(eventId || '0')
+    if (eventIdNum) {
+      const foundEvent = events.find(e => e.id === eventIdNum)
       if (foundEvent) {
         setEvent(foundEvent)
       } else {
-        eventsApi.getById(eventId).then(setEvent)
+        eventsApi.getById(eventIdNum).then(setEvent)
       }
     }
-  }, [id, events])
+  }, [eventId, events])
 
   useEffect(() => {
     if (event && selectedDate) {
@@ -53,29 +52,38 @@ export function BookingPage() {
       bookingsApi.getAvailableSlots(event.id, selectedDate)
         .then((data: AvailableSlotsResponse) => {
           setAvailableSlots(data.available_slots)
+          setOccupiedSlots(data.occupied_slots || [])
           setSelectedSlot(null)
         })
         .catch(() => {
           setAvailableSlots([])
+          setOccupiedSlots([])
         })
         .finally(() => setLoading(false))
     }
   }, [event, selectedDate])
 
-  const handleSlotSelect = (slot: string) => {
-    setSelectedSlot(slot)
-    setShowBookingForm(true)
-  }
-
   const handleBookingSuccess = () => {
     setShowBookingForm(false)
     setSelectedSlot(null)
     fetchBookings()
+    if (event && selectedDate) {
+      bookingsApi.getAvailableSlots(event.id, selectedDate)
+        .then((data: AvailableSlotsResponse) => {
+          setAvailableSlots(data.available_slots)
+          setOccupiedSlots(data.occupied_slots || [])
+        })
+    }
   }
 
   const handleBookingCancel = () => {
     setShowBookingForm(false)
     setSelectedSlot(null)
+  }
+
+  const handleSlotSelect = (slot: string) => {
+    setSelectedSlot(slot)
+    setShowBookingForm(true)
   }
 
   const formatDuration = (minutes: number) => {
@@ -135,9 +143,7 @@ export function BookingPage() {
         <BookingForm
           eventId={event.id}
           event={event}
-          availableSlots={availableSlots}
           selectedSlot={selectedSlot}
-          onSlotSelect={handleSlotSelect}
           onSuccess={handleBookingSuccess}
           onCancel={handleBookingCancel}
         />
@@ -159,8 +165,9 @@ export function BookingPage() {
 
           <TimeSlotGrid
             availableSlots={availableSlots}
-            onSlotSelect={handleSlotSelect}
+            occupiedSlots={occupiedSlots}
             selectedSlot={selectedSlot}
+            onSlotSelect={handleSlotSelect}
             loading={loading}
           />
         </>

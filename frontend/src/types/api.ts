@@ -29,4 +29,5 @@ export interface CreateBookingDto {
 
 export interface AvailableSlotsResponse {
   available_slots: string[]
+  occupied_slots?: string[]
 }

@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Button, TextInput, Text, Alert, Card, Group } from '@mantine/core'
-import { Calendar, Check } from 'lucide-react'
+import { Calendar, Check, AlertTriangle } from 'lucide-react'
 import type { CreateBookingDto } from '../types/api'
 import { useBookingsStore } from '../store/bookings'
 
 interface BookingFormProps {
   eventId: number
   event: any
-  availableSlots: string[]
   selectedSlot: string | null
-  onSlotSelect: (slot: string) => void
   onSuccess: () => void
   onCancel: () => void
 }
@@ -18,13 +16,12 @@ interface BookingFormProps {
 export function BookingForm({ 
   eventId, 
   event, 
-  availableSlots, 
   selectedSlot, 
-  onSlotSelect, 
   onSuccess, 
   onCancel 
 }: BookingFormProps) {
-  const { createBooking, loading } = useBookingsStore()
+  const { createBooking, loading, error: storeError } = useBookingsStore()
+  const [submitError, setSubmitError] = useState<string | null>(null)
   
   const form = useForm({
     initialValues: {
@@ -39,8 +36,9 @@ export function BookingForm({
     },
   })
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (_values: any) => {
     if (!selectedSlot) return
+    setSubmitError(null)
 
     try {
       const bookingData: CreateBookingDto = {
@@ -50,8 +48,9 @@ export function BookingForm({
       
       await createBooking(bookingData)
       onSuccess()
-    } catch (error) {
-      // Error is handled by the store
+    } catch (error: any) {
+      const message = error.response?.data?.slot?.[0] || error.response?.data || 'Не удалось создать бронь'
+      setSubmitError(typeof message === 'string' ? message : JSON.stringify(message))
     }
   }
 
@@ -70,6 +69,12 @@ export function BookingForm({
               Выбрано: {new Date(selectedSlot).toLocaleString('ru-RU')}
             </span>
           </Group>
+        </Alert>
+      )}
+
+      {(submitError || storeError) && (
+        <Alert mb="lg" color="red" variant="light" icon={<AlertTriangle size={16} />}>
+          {submitError || storeError}
         </Alert>
       )}
 
