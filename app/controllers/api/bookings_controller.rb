@@ -1,6 +1,6 @@
 class Api::BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :destroy]
-  
+  before_action :set_booking, only: [ :show, :destroy ]
+
   def index
     @bookings = Booking.includes(:event).all
     render json: @bookings
@@ -12,7 +12,7 @@ class Api::BookingsController < ApplicationController
 
   def create
     @booking = Booking.new(booking_params)
-    
+
     if @booking.save
       render json: @booking, status: :created
     else

@@ -1,5 +1,5 @@
 class Api::EventsController < ApplicationController
-  before_action :set_event, only: [:show, :destroy]
+  before_action :set_event, only: [ :show, :destroy ]
 
   def index
     @events = Event.all

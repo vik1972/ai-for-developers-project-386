@@ -1,5 +1,5 @@
 class Api::OwnersController < ApplicationController
-  before_action :set_owner, only: [:show, :dashboard]
+  before_action :set_owner, only: [ :show, :dashboard ]
 
   def show
     render json: @owner
@@ -8,7 +8,7 @@ class Api::OwnersController < ApplicationController
   def dashboard
     @events = @owner.events.includes(:bookings)
     @all_bookings = @owner.bookings.order(:slot)
-    
+
     render json: {
       owner: @owner,
       events: @events,
