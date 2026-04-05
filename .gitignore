@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 tmp/cache/
+=======
+tmp/
+log/
+storage/*.sqlite3*
+typespec/node_modules/
+>>>>>>> f1c268fc567092d4cfc36a6e312cfd096ebcb8f3

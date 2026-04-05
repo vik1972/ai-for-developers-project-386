@@ -83,7 +83,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.23.0)
       msgpack (~> 1.2)
-    brakeman (7.1.1)
+    brakeman (8.0.4)
       racc
     builder (3.3.0)
     capybara (3.40.0)
@@ -177,6 +177,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.6)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -319,6 +321,13 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   puma (>= 5.0)
+  brakeman (>= 8.0.4)
+  capybara
+  debug
+  importmap-rails
+  jbuilder
+  puma (>= 5.0)
+  rack-cors (~> 2.0)
   rails (~> 7.2.3, >= 7.2.3.1)
   rubocop-rails-omakase
   selenium-webdriver
@@ -330,4 +339,5 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   2.5.16
+  4.0.9
+
