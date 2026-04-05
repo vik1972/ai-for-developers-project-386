@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_05_082310) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_05_102208) do
   create_table "bookings", force: :cascade do |t|
     t.integer "event_id"
     t.datetime "slot"
@@ -24,5 +24,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_05_082310) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "owner_id"
   end
+
+  create_table "owners", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "events", "owners"
 end
