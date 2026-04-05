@@ -1,7 +1,14 @@
-@server
-@service("calendar-api")
-@useDocs("calendar-api.tsp")
+import "@typespec/http";
+import "@typespec/rest";
+import "@typespec/openapi3";
 
+using TypeSpec.Http;
+using TypeSpec.Rest;
+
+@service(#{
+  title: "Calendar API",
+})
+@server("http://localhost:3001", "Calendar API server")
 namespace Calendar {
   model Owner {
     @doc("Unique identifier for the owner")
@@ -43,7 +50,6 @@ namespace Calendar {
     updated_at: string;
 
     @doc("Owner details (optional)")
-    @optional
     owner?: Owner;
   }
 
@@ -64,7 +70,6 @@ namespace Calendar {
     updated_at: string;
 
     @doc("Event details (optional)")
-    @optional
     event?: Event;
   }
 
@@ -106,57 +111,57 @@ namespace Calendar {
   @doc("Get all event types (public)")
   @get
   @route("/events")
-  listEvents(): Event[];
+  op listEvents(): Event[];
 
   @doc("Get a specific event by ID (public)")
   @get
   @route("/events/{id}")
-  getEvent(id: int32): Event;
+  op getEvent(@path id: int32): Event;
 
   @doc("Create a new event type (owner only)")
   @post
   @route("/events")
-  createEvent(body: CreateEventRequest): Event;
+  op createEvent(@body body: CreateEventRequest): Event;
 
   @doc("Delete an event type (owner only)")
   @delete
   @route("/events/{id}")
-  deleteEvent(id: int32): void;
+  op deleteEvent(@path id: int32): void;
 
   @doc("Get owner information")
   @get
   @route("/owner")
-  getOwner(): Owner;
+  op getOwner(): Owner;
 
   @doc("Get owner dashboard with all events and bookings")
   @get
   @route("/owner/dashboard")
-  getDashboard(): DashboardResponse;
+  op getDashboard(): DashboardResponse;
 
   @doc("Get all bookings (owner only)")
   @get
   @route("/bookings")
-  listBookings(): Booking[];
+  op listBookings(): Booking[];
 
   @doc("Get a specific booking by ID")
   @get
   @route("/bookings/{id}")
-  getBooking(id: int32): Booking;
+  op getBooking(@path id: int32): Booking;
 
   @doc("Create a new booking (guest)")
   @post
   @route("/bookings")
-  createBooking(body: CreateBookingRequest): Booking;
+  op createBooking(@body body: CreateBookingRequest): Booking;
 
   @doc("Delete a booking (owner only)")
   @delete
   @route("/bookings/{id}")
-  deleteBooking(id: int32): void;
+  op deleteBooking(@path id: int32): void;
 
   @doc("Get available time slots for an event on a specific date")
   @get
   @route("/available_slots")
-  getAvailableSlots(
+  op getAvailableSlots(
     @query event_id: int32,
     @query date: string
   ): AvailableSlotsResponse;

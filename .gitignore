@@ -1,0 +1,4 @@
+tmp/
+log/
+storage/*.sqlite3*
+typespec/node_modules/
