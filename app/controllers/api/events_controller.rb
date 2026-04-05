@@ -1,6 +1,6 @@
 class Api::EventsController < ApplicationController
   before_action :set_event, only: [:show, :destroy]
-  
+
   def index
     @events = Event.all
     render json: @events
@@ -12,7 +12,8 @@ class Api::EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
-    
+    @event.owner = Owner.predefined_owner
+
     if @event.save
       render json: @event, status: :created
     else

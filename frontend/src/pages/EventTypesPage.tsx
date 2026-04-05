@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Button, Group, Card, Title, Text, Loader, Alert } from '@mantine/core'
-import { Plus } from 'lucide-react'
+import { Plus, Home } from 'lucide-react'
 import { EventCard } from '../components/EventCard'
 import { CreateEventForm } from '../components/CreateEventForm'
 import { useEventsStore } from '../store/events'
@@ -25,12 +25,22 @@ export function EventTypesPage() {
             Управляйте типами событий для бронирования
           </Text>
         </div>
-        <Button 
-          onClick={() => setCreateModalOpened(true)}
-          leftSection={<Plus size={16} />}
-        >
-          Создать тип события
-        </Button>
+        <Group>
+          <Button
+            component="a"
+            href="/"
+            variant="subtle"
+            leftSection={<Home size={16} />}
+          >
+            На главную
+          </Button>
+          <Button
+            onClick={() => setCreateModalOpened(true)}
+            leftSection={<Plus size={16} />}
+          >
+            Создать тип события
+          </Button>
+        </Group>
       </Group>
 
       {loading && <Loader mb="md" />}

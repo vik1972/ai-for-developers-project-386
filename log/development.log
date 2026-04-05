@@ -533,3 +533,118 @@ Processing by Api::EventsController#index as HTML
 Completed 200 OK in 3ms (Views: 2.0ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.2ms)
 
 
+Started GET "/" for 127.0.0.1 at 2026-04-05 11:45:32 +0200
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 1 pending migration:
+
+db/migrate/20260405094021_create_owners.rb
+
+
+):
+  
+activerecord (7.2.3.1) lib/active_record/migration.rb:756:in `check_pending_migrations'
+activerecord (7.2.3.1) lib/active_record/migration.rb:663:in `block (2 levels) in call'
+activesupport (7.2.3.1) lib/active_support/file_update_checker.rb:85:in `execute'
+activesupport (7.2.3.1) lib/active_support/file_update_checker.rb:95:in `execute_if_updated'
+activerecord (7.2.3.1) lib/active_record/migration.rb:670:in `block in call'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in `synchronize'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.3.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.3.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.3.1) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.2.6) lib/rack/method_override.rb:28:in `call'
+rack (3.2.6) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.3.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.2.6) lib/rack/sendfile.rb:131:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (2.0.2) lib/rack/cors.rb:102:in `call'
+railties (7.2.3.1) lib/rails/engine.rb:535:in `call'
+puma (7.2.0) lib/puma/configuration.rb:296:in `call'
+puma (7.2.0) lib/puma/request.rb:103:in `block in handle_request'
+puma (7.2.0) lib/puma/thread_pool.rb:355:in `with_force_shutdown'
+puma (7.2.0) lib/puma/request.rb:102:in `handle_request'
+puma (7.2.0) lib/puma/server.rb:503:in `process_client'
+puma (7.2.0) lib/puma/server.rb:262:in `block in run'
+puma (7.2.0) lib/puma/thread_pool.rb:182:in `block in spawn_thread'
+Started GET "/favicon.ico" for 127.0.0.1 at 2026-04-05 11:45:32 +0200
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 1 pending migration:
+
+db/migrate/20260405094021_create_owners.rb
+
+
+):
+  
+activerecord (7.2.3.1) lib/active_record/migration.rb:756:in `check_pending_migrations'
+activerecord (7.2.3.1) lib/active_record/migration.rb:663:in `block (2 levels) in call'
+activesupport (7.2.3.1) lib/active_support/file_update_checker.rb:85:in `execute'
+activerecord (7.2.3.1) lib/active_record/migration.rb:668:in `block in call'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in `synchronize'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.3.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.3.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.3.1) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.2.6) lib/rack/method_override.rb:28:in `call'
+rack (3.2.6) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.3.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.2.6) lib/rack/sendfile.rb:131:in `call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (2.0.2) lib/rack/cors.rb:102:in `call'
+railties (7.2.3.1) lib/rails/engine.rb:535:in `call'
+puma (7.2.0) lib/puma/configuration.rb:296:in `call'
+puma (7.2.0) lib/puma/request.rb:103:in `block in handle_request'
+puma (7.2.0) lib/puma/thread_pool.rb:355:in `with_force_shutdown'
+puma (7.2.0) lib/puma/request.rb:102:in `handle_request'
+puma (7.2.0) lib/puma/server.rb:503:in `process_client'
+puma (7.2.0) lib/puma/server.rb:262:in `block in run'
+puma (7.2.0) lib/puma/thread_pool.rb:182:in `block in spawn_thread'
