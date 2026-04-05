@@ -1,16 +1,16 @@
 class Api::OwnerController < ApplicationController
   before_action :set_owner
 
-  @doc("Get owner information")
+  # Get owner information
   def show
     render json: @owner
   end
 
-  @doc("Get owner dashboard with all events and bookings")
+  # Get owner dashboard with all events and bookings
   def dashboard
     @events = @owner.events.includes(:bookings)
     @all_bookings = @owner.bookings.includes(:event).order(:slot)
-    
+
     render json: {
       owner: @owner,
       events: @events,
@@ -18,7 +18,7 @@ class Api::OwnerController < ApplicationController
     }
   end
 
-  @doc("Create a new event type")
+  # Create a new event type
   def create_event
     @event = Event.new(event_params)
     @event.owner = @owner
@@ -30,20 +30,20 @@ class Api::OwnerController < ApplicationController
     end
   end
 
-  @doc("Delete an event type")
+  # Delete an event type
   def delete_event
     @event = @owner.events.find(params[:id])
     @event.destroy
     head :no_content
   end
 
-  @doc("Get all owner bookings")
+  # Get all owner bookings
   def bookings
     @bookings = @owner.bookings.includes(:event).order(:slot)
     render json: @bookings
   end
 
-  @doc("Delete a booking")
+  # Delete a booking
   def delete_booking
     @booking = @owner.bookings.find(params[:id])
     @booking.destroy

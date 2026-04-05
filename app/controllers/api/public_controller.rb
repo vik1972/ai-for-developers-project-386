@@ -1,20 +1,20 @@
 class Api::PublicController < ApplicationController
-  @doc("Get all public event types for guests")
+  # Get all public event types for guests
   def events
     @events = Event.all.includes(:owner)
     render json: @events
   end
 
-  @doc("Get a specific event details for guests")
+  # Get a specific event details for guests
   def event
     @event = Event.find(params[:id])
     render json: @event
   end
 
-  @doc("Create a new booking for guest")
+  # Create a new booking for guest
   def create_booking
     @booking = Booking.new(booking_params)
-    
+
     if @booking.save
       render json: @booking, status: :created
     else
