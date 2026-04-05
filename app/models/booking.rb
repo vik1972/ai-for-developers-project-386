@@ -1,6 +1,6 @@
 class Booking < ApplicationRecord
   belongs_to :event
-  belongs_to :owner, through: :event
+  has_one :owner, through: :event
 
   validates :event_id, presence: true
   validates :slot, presence: true
