@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Group, Card, Title, Text, Loader, Alert } from '@mantine/core'
 import { Plus, Home } from 'lucide-react'
 import { EventCard } from '../components/EventCard'
