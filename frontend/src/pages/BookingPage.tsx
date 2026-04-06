@@ -140,13 +140,15 @@ export function BookingPage() {
       </Card>
 
       {showBookingForm ? (
-        <BookingForm
-          eventId={event.id}
-          event={event}
-          selectedSlot={selectedSlot}
-          onSuccess={handleBookingSuccess}
-          onCancel={handleBookingCancel}
-        />
+        <>
+          <BookingForm
+            eventId={event.id}
+            event={event}
+            selectedSlot={selectedSlot}
+            onSuccess={handleBookingSuccess}
+            onCancel={handleBookingCancel}
+          />
+        </>
       ) : (
         <>
           <Group mb="md">

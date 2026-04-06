@@ -13,8 +13,8 @@ class Api::AvailableSlotsController < ApplicationController
                            .where("DATE(slot) = ?", date)
                            .pluck(:slot)
 
-    start_time = Time.parse(date).beginning_of_day
-    end_time = Time.parse(date).end_of_day
+    start_time = Time.parse(date).beginning_of_day.utc
+    end_time = Time.parse(date).end_of_day.utc
 
     available_slots = []
     current_time = start_time
@@ -22,11 +22,18 @@ class Api::AvailableSlotsController < ApplicationController
     while current_time < end_time
       slot_end = current_time + event.duration.minutes
 
-      if slot_end <= end_time &&
-         !occupied_slots.any? { |occupied|
-           (current_time >= occupied && current_time < occupied + event.duration.minutes) ||
-           (slot_end > occupied && slot_end <= occupied + event.duration.minutes)
-         }
+      is_occupied = occupied_slots.any? { |occupied|
+        occupied_start = occupied.is_a?(String) ? Time.parse(occupied).utc : occupied.utc
+        occupied_end = occupied_start + event.duration.minutes
+
+        overlap = (current_time >= occupied_start && current_time < occupied_end) ||
+                  (slot_end > occupied_start && slot_end <= occupied_end) ||
+                  (current_time <= occupied_start && slot_end >= occupied_end)
+
+        overlap
+      }
+
+      if slot_end <= end_time && !is_occupied
         available_slots << current_time.strftime("%Y-%m-%d %H:%M")
       end
 

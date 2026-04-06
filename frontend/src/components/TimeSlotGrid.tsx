@@ -1,4 +1,4 @@
-import { Card, Text, Group, Button, Badge } from '@mantine/core'
+import { Card, Text, Group, Badge } from '@mantine/core'
 import { Calendar, Clock } from 'lucide-react'
 
 interface TimeSlotGridProps {
@@ -31,9 +31,16 @@ export function TimeSlotGrid({ availableSlots, occupiedSlots = [], selectedSlot,
     return grouped
   }
 
-  const allSlots = [...availableSlots, ...occupiedSlots]
+  const normalizeSlot = (slot: string) => {
+    // Преобразуем "2026-04-06 00:00" в "2026-04-06T00:00:00" для надежного сравнения
+    return slot.replace(' ', 'T')
+  }
+
+  const allSlots = Array.from(new Set([...availableSlots, ...occupiedSlots].map(normalizeSlot)))
+    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
   const groupedSlots = groupSlotsByHour(allSlots)
-  const availableSet = new Set(availableSlots)
+  const availableSet = new Set(availableSlots.map(normalizeSlot))
+  const occupiedSet = new Set(occupiedSlots.map(normalizeSlot))
 
   return (
     <Card p="lg" withBorder>
@@ -53,6 +60,9 @@ export function TimeSlotGrid({ availableSlots, occupiedSlots = [], selectedSlot,
         </Text>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Text size="sm" c="blue">
+            Доступно: {availableSlots.length}, Занято: {occupiedSlots.length}
+          </Text>
           {Object.entries(groupedSlots).map(([date, slotList]) => (
             <div key={date}>
               <Text size="sm" c="dimmed" mb="md">{date}</Text>
@@ -62,23 +72,35 @@ export function TimeSlotGrid({ availableSlots, occupiedSlots = [], selectedSlot,
                     hour: '2-digit', 
                     minute: '2-digit' 
                   })
-                  const isOccupied = !availableSet.has(slot)
+                  const isOccupied = occupiedSet.has(slot)
+                  const isAvailable = availableSet.has(slot) && !isOccupied
+                  const isSelected = selectedSlot && normalizeSlot(selectedSlot) === slot
                   
                   return (
-                    <Button
+                    <button
                       key={slot}
-                      variant={selectedSlot === slot ? 'filled' : isOccupied ? 'subtle' : 'outline'}
-                      color={isOccupied ? 'gray' : 'blue'}
-                      disabled={isOccupied}
-                      onClick={() => !isOccupied && onSlotSelect(slot)}
-                      size="sm"
-                      fullWidth
+                      onClick={() => isAvailable && onSlotSelect(slot)}
+                      disabled={isOccupied || !isAvailable}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '4px',
+                        border: isSelected ? 'none' : isOccupied ? '1px solid #ff6b6b' : '1px solid #51cf66',
+                        backgroundColor: isSelected ? '#2b8a3e' : isOccupied ? '#ffe3e3' : '#d3f9d8',
+                        color: isSelected ? 'white' : isOccupied ? '#c92a2a' : '#2b8a3e',
+                        cursor: isOccupied ? 'not-allowed' : 'pointer',
+                        opacity: isOccupied ? 0.7 : 1,
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        width: '100%',
+                      }}
                     >
-                      <Group gap="xs">
-                        <Clock size={14} />
-                        {time}
-                      </Group>
-                    </Button>
+                      <Clock size={14} />
+                      {time}
+                    </button>
                   )
                 })}
               </div>
