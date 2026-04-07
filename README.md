@@ -17,3 +17,31 @@
 ### Правило занятости:
      - На одно и то же время нельзя создать две записи, даже если это разные типы событий.
 
+## Деплой
+
+Приложение развернуто на Render: https://calendar-booking-app.onrender.com
+
+### Docker
+
+Приложение упаковано в Docker-контейнер с помощью multi-stage Dockerfile:
+- Node.js 20 — сборка React фронтенда
+- Ruby 3.3.6 — Rails API backend
+- SQLite база данных с persistent storage
+
+### Переменные окружения
+
+- `PORT` — порт, на котором запускается приложение (устанавливается Render автоматически)
+- `RAILS_ENV=production` — режим production
+- `SECRET_KEY_BASE` — секретный ключ Rails (генерируется автоматически)
+- `RAILS_LOG_LEVEL=info` — уровень логирования
+
+### Локальный запуск Docker
+
+```bash
+# Сборка образа
+docker build -t calendar-app .
+
+# Запуск контейнера
+docker run -p 3000:3000 -e PORT=3000 calendar-app
+```
+
