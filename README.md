@@ -35,6 +35,61 @@
 - `SECRET_KEY_BASE` — секретный ключ Rails (генерируется автоматически)
 - `RAILS_LOG_LEVEL=info` — уровень логирования
 
+## 🚀 Деплой на Render
+
+### Способ 1: Blueprint (рекомендуется)
+
+1. Перейдите на [Render Blueprint](https://dashboard.render.com/blueprints/new?repo=https://github.com/vik1972/ai-for-developers-project-386)
+2. Нажмите **"Connect"** и **"Apply"**
+3. Render автоматически создаст сервис с настройками из `render.yaml`
+
+### Способ 2: Ручная настройка
+
+1. На [Render Dashboard](https://dashboard.render.com) нажмите **"New +" → "Web Service"**
+2. Выберите GitHub репозиторий `vik1972/ai-for-developers-project-386`
+3. Настройки:
+   - **Name**: `calendar-booking-app`
+   - **Runtime**: `Docker`
+   - **Branch**: `main`
+   - **Plan**: `Free`
+   - **Health Check Path**: `/up`
+4. Добавьте **Persistent Disk**:
+   - Name: `sqlite-data`
+   - Mount Path: `/var/data`
+   - Size: `1 GB`
+5. Нажмите **"Create Web Service"**
+
+### Способ 3: Render CLI (локально)
+
+```bash
+# Установка Render CLI
+curl -fsSL https://raw.githubusercontent.com/render-oss/render-cli/main/install.sh | bash
+
+# Авторизация
+render login
+
+# Деплой через Blueprint
+./bin/deploy-render
+```
+
+### Автоматический деплой через GitHub Actions
+
+При пуше в `main` ветку автоматически запускается деплой (требуется настройка `RENDER_DEPLOY_HOOK_URL` в GitHub Secrets).
+
+### Настройка автодеплоя
+
+1. После первого ручного деплоя, получите **Deploy Hook URL** в настройках сервиса на Render
+2. Добавьте его в GitHub репозиторий: **Settings → Secrets → New repository secret**
+   - Name: `RENDER_DEPLOY_HOOK_URL`
+   - Value: ваш Deploy Hook URL с Render
+3. Теперь каждый пуш в `main` будет автоматически деплоиться
+
+### Проверка деплоя
+
+- **Health Check**: `https://calendar-booking-app.onrender.com/up`
+- **Dashboard**: https://dashboard.render.com
+- **Логи**: В разделе "Logs" на Render Dashboard
+
 ### Локальный запуск Docker
 
 ```bash
