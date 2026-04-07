@@ -98,5 +98,12 @@ test.describe('Guest Booking Flow', () => {
     const totalCount = await allSlots.count();
 
     expect(totalCount).toBeGreaterThan(0);
+    
+    // Check that some slots are disabled (occupied)
+    const disabledSlots = page.locator('button:disabled');
+    const disabledCount = await disabledSlots.count();
+    
+    // With our test fixtures, we should have 2 occupied slots on 2026-04-05
+    expect(disabledCount).toBeGreaterThan(0);
   });
 });
