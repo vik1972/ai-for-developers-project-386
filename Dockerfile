@@ -19,8 +19,8 @@ RUN npm run build
 # ============================================================
 # Stage 2: Base Ruby image
 # ============================================================
+FROM docker.io/library/ruby:3.3.6-slim AS base
 ARG RUBY_VERSION=3.3.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
