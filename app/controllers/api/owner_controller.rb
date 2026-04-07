@@ -57,6 +57,6 @@ class Api::OwnerController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :description, :duration)
+    params.permit(:name, :description, :duration)
   end
 end

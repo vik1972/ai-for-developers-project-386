@@ -31,8 +31,9 @@ export const useBookingsStore = create<BookingsState>((set) => ({
     try {
       const newBooking = await bookingsApi.create(data)
       set((state) => ({ bookings: [...state.bookings, newBooking], loading: false }))
-    } catch (error: any) {
-      const message = error.response?.data?.slot?.[0] || error.response?.data || 'Failed to create booking'
+    } catch (error) {
+      const err = error as { response?: { data?: { slot?: string[] } | string } }
+      const message = err.response?.data?.slot?.[0] || err.response?.data || 'Failed to create booking'
       set({ error: message, loading: false })
       throw error
     }

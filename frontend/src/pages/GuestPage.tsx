@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Card,
@@ -13,11 +13,9 @@ import {
 } from '@mantine/core'
 import {
   Calendar,
-  Clock,
   User,
   ArrowRight
 } from 'lucide-react'
-import { eventsApi } from '../api/events'
 import { useEventsStore } from '../store/events'
 import type { Event } from '../types/api'
 
@@ -27,15 +25,6 @@ export function GuestPage() {
   useEffect(() => {
     fetchEvents()
   }, [fetchEvents])
-
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    if (hours > 0) {
-      return `${hours}ч ${mins}м`
-    }
-    return `${mins}м`
-  }
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>

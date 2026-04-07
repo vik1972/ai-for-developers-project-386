@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Button, TextInput, Text, Alert, Card, Group } from '@mantine/core'
 import { Calendar, Check, AlertTriangle } from 'lucide-react'
-import type { CreateBookingDto } from '../types/api'
+import type { CreateBookingDto, Event } from '../types/api'
 import { useBookingsStore } from '../store/bookings'
 
 interface BookingFormProps {
   eventId: number
-  event: any
+  event: Event
   selectedSlot: string | null
   onSuccess: () => void
   onCancel: () => void
@@ -36,7 +36,7 @@ export function BookingForm({
     },
   })
 
-  const handleSubmit = async (_values: any) => {
+  const handleSubmit = async () => {
     if (!selectedSlot) return
     setSubmitError(null)
 
@@ -48,8 +48,9 @@ export function BookingForm({
       
       await createBooking(bookingData)
       onSuccess()
-    } catch (error: any) {
-      const message = error.response?.data?.slot?.[0] || error.response?.data || 'Не удалось создать бронь'
+    } catch (error) {
+      const err = error as { response?: { data?: { slot?: string[] } | string } }
+      const message = err.response?.data?.slot?.[0] || err.response?.data || 'Не удалось создать бронь'
       setSubmitError(typeof message === 'string' ? message : JSON.stringify(message))
     }
   }

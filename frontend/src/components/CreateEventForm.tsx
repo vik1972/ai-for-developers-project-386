@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Button, TextInput, Textarea, Group, Modal } from '@mantine/core'
 import { Plus } from 'lucide-react'

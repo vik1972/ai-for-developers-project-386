@@ -6,29 +6,24 @@ import {
   Text,
   Button,
   Loader,
-  Alert,
   Group,
   Badge,
   Table,
-  Space,
   ActionIcon,
-  Divider,
   Grid
 } from '@mantine/core'
 import {
-  ArrowLeft,
   Calendar,
   Clock,
   Trash2,
   Plus,
-  Users,
   CalendarDays
 } from 'lucide-react'
 import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
 import { useEventsStore } from '../store/events'
 import { useBookingsStore } from '../store/bookings'
-import type { Event, Booking } from '../types/api'
+import type { Booking } from '../types/api'
 
 export function DashboardPage() {
   const { events, loading: eventsLoading, fetchEvents } = useEventsStore()

@@ -1,4 +1,4 @@
-import { Card, Text, Group, Button, Badge, ActionIcon } from '@mantine/core'
+import { Card, Text, Group, Badge, ActionIcon } from '@mantine/core'
 import { Trash, Clock } from 'lucide-react'
 import type { Event } from '../types/api'
 import { useEventsStore } from '../store/events'
