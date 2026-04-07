@@ -12,11 +12,18 @@
     "githab_server": {
       "type": "local",
       "command": [
-        "",
         "npx",
         "-y",
         "@modelcontextprotocol/server-github"
       ]
+    },
+    "render": {
+      "type": "local",
+      "command": ["npx", "-y", "@render/mcp-server"],
+      "enabled": true,
+      "environment": {
+        "RENDER_API_KEY": "rnd_PI655DYh59OeyPgPZZxgzq6JYGoF"
+      }
     }
   }
 }
