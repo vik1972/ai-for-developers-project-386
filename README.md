@@ -19,14 +19,14 @@
 
 ## Деплой
 
-Приложение развернуто на Render: https://calendar-booking-app.onrender.com
+Приложение развернуто на Render: https://calendar-booking-app-6f0s.onrender.com
 
 ### Docker
 
 Приложение упаковано в Docker-контейнер с помощью multi-stage Dockerfile:
 - Node.js 20 — сборка React фронтенда
 - Ruby 3.3.6 — Rails API backend
-- SQLite база данных с persistent storage
+- PostgreSQL база данных (Render предоставляет free tier PostgreSQL)
 
 ### Переменные окружения
 
@@ -45,19 +45,24 @@
 
 ### Способ 2: Ручная настройка
 
-1. На [Render Dashboard](https://dashboard.render.com) нажмите **"New +" → "Web Service"**
-2. Выберите GitHub репозиторий `vik1972/ai-for-developers-project-386`
-3. Настройки:
+1. Сначала создайте **PostgreSQL Database**:
+   - На [Render Dashboard](https://dashboard.render.com) нажмите **"New +" → "PostgreSQL"**
+   - **Name**: `calendar-booking-db`
+   - **Plan**: `Free`
+   - Сохраните **Internal Connection String**
+
+2. На [Render Dashboard](https://dashboard.render.com) нажмите **"New +" → "Web Service"**
+3. Выберите GitHub репозиторий `vik1972/ai-for-developers-project-386`
+4. Настройки:
    - **Name**: `calendar-booking-app`
    - **Runtime**: `Docker`
    - **Branch**: `main`
    - **Plan**: `Free`
    - **Health Check Path**: `/up`
-4. Добавьте **Persistent Disk**:
-   - Name: `sqlite-data`
-   - Mount Path: `/var/data`
-   - Size: `1 GB`
-5. Нажмите **"Create Web Service"**
+5. Добавьте переменную окружения **DATABASE_URL**:
+   - Key: `DATABASE_URL`
+   - Value: Internal Connection String из шага 1
+6. Нажмите **"Create Web Service"**
 
 ### Способ 3: Render CLI (локально)
 
@@ -86,7 +91,8 @@ render login
 
 ### Проверка деплоя
 
-- **Health Check**: `https://calendar-booking-app.onrender.com/up`
+- **Health Check**: `https://calendar-booking-app-6f0s.onrender.com/up`
+- **API Events**: `https://calendar-booking-app-6f0s.onrender.com/api/public/events`
 - **Dashboard**: https://dashboard.render.com
 - **Логи**: В разделе "Logs" на Render Dashboard
 
