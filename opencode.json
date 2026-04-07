@@ -19,7 +19,7 @@
     },
     "render": {
       "type": "local",
-      "command": ["npx", "-y", "@render/mcp-server"],
+      "command": ["docker", "run", "-i", "--rm", "-e", "RENDER_API_KEY", "-v", "render-mcp-server-config:/config", "ghcr.io/render-oss/render-mcp-server"],
       "enabled": true,
       "environment": {
         "RENDER_API_KEY": "rnd_PI655DYh59OeyPgPZZxgzq6JYGoF"
