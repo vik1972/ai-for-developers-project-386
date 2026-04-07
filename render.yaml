@@ -9,8 +9,12 @@ services:
         value: production
       - key: RAILS_LOG_LEVEL
         value: info
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
       - key: SECRET_KEY_BASE
         generateValue: true
+      - key: PORT
+        value: 10000
     disk:
       name: sqlite-data
       mountPath: /var/data
