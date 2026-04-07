@@ -17,7 +17,25 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      throw new Error(error.response.data.error || 'API Error')
+      // Rails может возвращать ошибки в разных форматах:
+      // 1. { error: "сообщение" } — общая ошибка
+      // 2. { name: ["is too short"], duration: ["must be greater than 0"] } — ошибки валидации
+      const data = error.response.data
+      
+      // Если есть поле error — используем его
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      
+      // Иначе собираем ошибки валидации в строку
+      const errorMessages = Object.entries(data)
+        .map(([field, messages]) => {
+          const messageArray = Array.isArray(messages) ? messages : [messages]
+          return `${field}: ${messageArray.join(', ')}`
+        })
+        .join('; ')
+      
+      throw new Error(errorMessages || 'API Error')
     }
     throw error
   },

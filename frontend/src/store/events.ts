@@ -9,6 +9,7 @@ interface EventsState {
   fetchEvents: () => Promise<void>
   createEvent: (data: CreateEventDto) => Promise<void>
   deleteEvent: (id: number) => Promise<void>
+  clearError: () => void
 }
 
 export const useEventsStore = create<EventsState>((set) => ({
@@ -48,4 +49,6 @@ export const useEventsStore = create<EventsState>((set) => ({
       set({ error: error instanceof Error ? error.message : 'Failed to delete event', loading: false })
     }
   },
+
+  clearError: () => set({ error: null }),
 }))

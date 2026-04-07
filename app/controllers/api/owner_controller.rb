@@ -1,5 +1,6 @@
 class Api::OwnerController < ApplicationController
   before_action :set_owner
+  skip_before_action :verify_authenticity_token
 
   # Get owner information
   def show

@@ -3,6 +3,6 @@ class Owner < ApplicationRecord
   has_many :bookings, through: :events
 
   def self.predefined_owner
-    first_or_create!(name: "Default Owner")
+    first_or_create!(name: "Default Owner", email: "owner@example.com")
   end
 end
