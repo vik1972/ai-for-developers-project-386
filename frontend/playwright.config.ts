@@ -21,18 +21,20 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: [
-    {
-      command: 'cd .. && RAILS_ENV=test bundle exec rails db:test:prepare db:seed && RAILS_ENV=test bundle exec rails server -p 3001',
-      url: 'http://localhost:3001/api/public/events',
-      timeout: 120000,
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'npm run dev',
-      url: 'http://localhost:3000',
-      timeout: 60000,
-      reuseExistingServer: !process.env.CI,
-    },
-  ],
+  webServer: process.env.CI
+    ? undefined
+    : [
+        {
+          command: 'cd .. && RAILS_ENV=test bundle exec rails server -p 3001',
+          url: 'http://localhost:3001/api/public/events',
+          timeout: 120000,
+          reuseExistingServer: true,
+        },
+        {
+          command: 'npm run dev',
+          url: 'http://localhost:3000',
+          timeout: 60000,
+          reuseExistingServer: true,
+        },
+      ],
 });
