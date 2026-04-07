@@ -24,9 +24,9 @@ ARG RUBY_VERSION=3.3.6
 
 WORKDIR /rails
 
-# Install base packages
+# Install base packages including PostgreSQL client
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq5 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -40,9 +40,9 @@ ENV RAILS_ENV="production" \
 # ============================================================
 FROM base AS build
 
-# Install packages needed to build gems
+# Install packages needed to build gems (including PostgreSQL)
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config libpq-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -65,9 +65,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 # ============================================================
 FROM base
 
-# Create data directory for SQLite with proper permissions
-RUN mkdir -p /var/data && chmod 777 /var/data
-
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
@@ -78,7 +75,7 @@ RUN mkdir -p public && cp -r frontend/dist/* public/ 2>/dev/null || true
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp public /var/data
+    chown -R rails:rails db log storage tmp public
 USER 1000:1000
 
 # Entrypoint prepares the database
