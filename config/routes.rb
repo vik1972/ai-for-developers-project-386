@@ -33,5 +33,8 @@ Rails.application.routes.draw do
   end
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "static#index"
+
+  # Catch-all route for React SPA (must be last)
+  get "*path", to: "static#index", constraints: ->(req) { !req.path.start_with?("/api/", "/up", "/rails/") }
 end

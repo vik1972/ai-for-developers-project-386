@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: calendar-booking-app
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_LEVEL
+        value: info
+      - key: SECRET_KEY_BASE
+        generateValue: true
+    disk:
+      name: sqlite-data
+      mountPath: /var/data
+      sizeGB: 1
