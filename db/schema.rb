@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_14_155357) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_14_160642) do
   create_table "availability_exceptions", force: :cascade do |t|
     t.integer "owner_id", null: false
     t.date "date"
@@ -51,6 +51,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_14_155357) do
     t.string "custom_fields"
   end
 
+  create_table "calendar_integrations", force: :cascade do |t|
+    t.integer "owner_id", null: false
+    t.string "provider"
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "expires_at"
+    t.string "calendar_id"
+    t.boolean "is_active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_calendar_integrations_on_owner_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -76,5 +89,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_14_155357) do
 
   add_foreign_key "availability_exceptions", "owners"
   add_foreign_key "availability_schedules", "owners"
+  add_foreign_key "calendar_integrations", "owners"
   add_foreign_key "events", "owners"
 end
