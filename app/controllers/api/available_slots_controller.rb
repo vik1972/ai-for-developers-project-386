@@ -9,47 +9,105 @@ class Api::AvailableSlotsController < ApplicationController
     end
 
     event = Event.find(event_id)
+    owner = event.owner
+    requested_date = Date.parse(date)
+
+    # Check availability for this date
+    availability = owner.availability_for(requested_date)
+
+    available_slots = case availability[:type]
+    when :exception
+                        handle_exception_availability(availability[:data], event, requested_date)
+    when :schedule
+                        handle_schedule_availability(availability[:data], event, requested_date)
+    end
+
+    # Get occupied slots from bookings
     occupied_slots = Booking.where(event_id: event_id)
                            .where("DATE(slot) = ?", date)
                            .pluck(:slot)
 
-    start_time = Time.parse(date).beginning_of_day.utc
-    end_time = Time.parse(date).end_of_day.utc
-    now = Time.now.utc
-
-    # If the requested date is in the past, all slots are unavailable
-    is_past_date = end_time < now
-
-    available_slots = []
-    current_time = start_time
-
-    while current_time < end_time
-      slot_end = current_time + event.duration.minutes
-
-      # Skip slots that are in the past
-      is_in_past = current_time < now
-
-      is_occupied = occupied_slots.any? { |occupied|
-        occupied_start = occupied.is_a?(String) ? Time.parse(occupied).utc : occupied.utc
-        occupied_end = occupied_start + event.duration.minutes
-
-        overlap = (current_time >= occupied_start && current_time < occupied_end) ||
-                  (slot_end > occupied_start && slot_end <= occupied_end) ||
-                  (current_time <= occupied_start && slot_end >= occupied_end)
-
-        overlap
-      }
-
-      if slot_end <= end_time && !is_occupied && !is_in_past && !is_past_date
-        available_slots << current_time.strftime("%Y-%m-%d %H:%M")
-      end
-
-      current_time += 30.minutes
-    end
+    # Filter out occupied slots
+    final_slots = filter_occupied_slots(available_slots, occupied_slots, event.duration)
 
     render json: {
-      available_slots: available_slots,
-      occupied_slots: occupied_slots.map { |s| s.strftime("%Y-%m-%d %H:%M") }
+      available_slots: final_slots,
+      occupied_slots: occupied_slots.map { |s| s.is_a?(String) ? s : s.strftime("%Y-%m-%d %H:%M") }
     }
+  rescue ArgumentError => e
+    render json: { error: "Invalid date format: #{e.message}" }, status: :bad_request
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Event not found" }, status: :not_found
+  end
+
+  private
+
+  def handle_exception_availability(exception, event, date)
+    return [] unless exception.is_available
+
+    # If partial availability with specific slots
+    if exception.partial_availability?
+      exception.available_slots_data.map do |time_str|
+        "#{date} #{time_str}"
+      end
+    else
+      # Full day available - use default business hours
+      generate_slots_for_time_range(date, "09:00", "17:00", event.duration)
+    end
+  end
+
+  def handle_schedule_availability(day_schedule, event, date)
+    return [] unless day_schedule["enabled"]
+
+    start_time = day_schedule["start"] || "09:00"
+    end_time = day_schedule["end"] || "17:00"
+
+    generate_slots_for_time_range(date, start_time, end_time, event.duration)
+  end
+
+  def generate_slots_for_time_range(date, start_time_str, end_time_str, duration)
+    slots = []
+    date_str = date.to_s
+
+    begin
+      start_datetime = DateTime.parse("#{date_str} #{start_time_str}")
+      end_datetime = DateTime.parse("#{date_str} #{end_time_str}")
+      now = DateTime.now
+      step = Rational(30, 1440) # 30 minutes as fraction of day
+
+      current_time = start_datetime
+
+      while current_time < end_datetime
+        slot_end = current_time + Rational(duration, 1440) # duration in minutes as fraction of day
+
+        # Skip slots that are in the past, but still advance
+        if current_time < now
+          current_time += step
+          next
+        end
+
+        # Skip if slot extends beyond end time
+        break if slot_end > end_datetime
+
+        slots << current_time.strftime("%Y-%m-%d %H:%M")
+
+        current_time += step
+      end
+
+      slots
+    rescue ArgumentError => e
+      Rails.logger.error("Error generating slots: #{e.message}")
+      []
+    end
+  end
+
+  def filter_occupied_slots(available_slots, occupied_slots, duration)
+    return available_slots if occupied_slots.empty?
+
+    occupied_strings = occupied_slots.map { |o| o.is_a?(String) ? o : o.strftime("%Y-%m-%d %H:%M") }
+
+    available_slots.reject do |slot_str|
+      occupied_strings.include?(slot_str)
+    end
   end
 end

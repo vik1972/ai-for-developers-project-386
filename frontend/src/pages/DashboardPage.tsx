@@ -17,7 +17,9 @@ import {
   Clock,
   Trash2,
   Plus,
-  CalendarDays
+  CalendarDays,
+  Settings,
+  List
 } from 'lucide-react'
 import { eventsApi } from '../api/events'
 import { bookingsApi } from '../api/bookings'
@@ -120,13 +122,31 @@ export function DashboardPage() {
             Управление событиями и бронированиями
           </Text>
         </div>
-        <Button
-          component={Link}
-          to="/events"
-          leftSection={<Plus size={16} />}
-        >
-          Создать событие
-        </Button>
+        <Group>
+          <Button
+            component={Link}
+            to="/dashboard/bookings"
+            leftSection={<List size={16} />}
+            variant="light"
+          >
+            Бронирования
+          </Button>
+          <Button
+            component={Link}
+            to="/dashboard/availability"
+            leftSection={<Settings size={16} />}
+            variant="light"
+          >
+            Доступность
+          </Button>
+          <Button
+            component={Link}
+            to="/events"
+            leftSection={<Plus size={16} />}
+          >
+            Создать событие
+          </Button>
+        </Group>
       </Group>
 
       {/* Statistics Cards */}

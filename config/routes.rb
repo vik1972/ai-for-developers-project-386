@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     scope "public", as: nil do
+      get "/:slug", to: "public#owner_profile", constraints: { slug: /[^\/]+/ }
+      get "/:slug/events", to: "public#owner_events", constraints: { slug: /[^\/]+/ }
       get "events", to: "public#events"
       get "events/:id", to: "public#event"
       post "bookings", to: "public#create_booking"
@@ -23,10 +25,33 @@ Rails.application.routes.draw do
       post "events", to: "owner#create_event"
       delete "events/:id", to: "owner#delete_event"
       delete "bookings/:id", to: "owner#delete_booking"
+
+      # Availability routes
+      get "availability/schedules", to: "availability#schedules"
+      get "availability/schedules/:id", to: "availability#show_schedule"
+      post "availability/schedules", to: "availability#create_schedule"
+      put "availability/schedules/:id", to: "availability#update_schedule"
+      delete "availability/schedules/:id", to: "availability#delete_schedule"
+
+      get "availability/exceptions", to: "availability#exceptions"
+      post "availability/exceptions", to: "availability#create_exception"
+      delete "availability/exceptions/:id", to: "availability#delete_exception"
+
+      get "availability/preview", to: "availability#preview"
     end
 
     resources :events, only: [ :index, :show, :create, :destroy ]
-    resources :bookings, only: [ :index, :show, :create, :destroy ]
+    resources :bookings, only: [ :index, :show, :create, :destroy ] do
+      member do
+        patch :status, to: "bookings#update_status"
+        post :cancel
+        post :reschedule
+      end
+      collection do
+        post :bulk_cancel
+        post :bulk_update_status
+      end
+    end
     get "available_slots", to: "available_slots#index"
     get "owner", to: "owners#show"
     get "owner/dashboard", to: "owners#dashboard"
