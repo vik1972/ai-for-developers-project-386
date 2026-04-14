@@ -74,7 +74,8 @@ RUN mkdir -p public && cp -r frontend/dist/* public/ 2>/dev/null || true
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    adduser --uid 1000 --gid 1000 --home /home/rails --shell /bin/bash --disabled-password --gecos "" rails && \
+    mkdir -p db log storage tmp public && \
     chown -R rails:rails db log storage tmp public
 USER 1000:1000
 
@@ -82,5 +83,5 @@ USER 1000:1000
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD ["./bin/rails", "server"]
+EXPOSE 10000
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "10000"]
