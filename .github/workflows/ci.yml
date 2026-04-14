@@ -128,14 +128,14 @@ jobs:
         env:
           RAILS_ENV: test
         run: |
-          bundle exec rails server -p 3001 &
-          npx wait-on http://localhost:3001/api/public/events --timeout 60000
+          bundle exec rails server -p 3001 -b 0.0.0.0 &
+          npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
 
       - name: Start frontend dev server
         working-directory: frontend
         run: |
-          npm run dev &
-          npx wait-on http://localhost:3000 --timeout 60000
+          npx vite --host 127.0.0.1 --port 3000 &
+          npx wait-on http://127.0.0.1:3000 --timeout 60000
 
       - name: Run Playwright E2E tests
         working-directory: frontend
