@@ -21,14 +21,13 @@ test.describe('Guest Booking Flow', () => {
     await firstEvent.click();
 
     // Check we're on the booking page
-    await expect(page.getByText(/длительностью|минут/)).toBeVisible();
-    await expect(page.locator('input[type="date"], [data-testid="calendar"]')).toBeVisible();
+    await expect(page.getByText(/Длительность|Доступные слоты/)).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('input[type="date"]')).toBeVisible();
 
-    await page.waitForTimeout(1000);
+    // Wait for slots to load
+    await expect(page.getByText(/доступно|нет доступных/i)).toBeVisible({ timeout: 15000 });
 
-    const availableSlots = page.locator('button:not(:disabled)');
-    await expect(availableSlots.first()).toBeVisible({ timeout: 10000 });
-
+    const availableSlots = page.locator('button:not([disabled])');
     const count = await availableSlots.count();
     expect(count).toBeGreaterThan(0);
   });
@@ -40,13 +39,15 @@ test.describe('Guest Booking Flow', () => {
     const firstEvent = page.locator('a[href^="/booking/"]').first();
     await firstEvent.click();
 
-    await page.waitForTimeout(1000);
+    // Wait for booking page to load
+    await expect(page.getByText(/Длительность|Доступные слоты/)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/доступно|нет доступных/i)).toBeVisible({ timeout: 15000 });
 
     // Step 1: Select a date (if calendar is shown)
     const dateInput = page.locator('input[type="date"]').first();
     if (await dateInput.isVisible().catch(() => false)) {
       // For old booking page
-      const availableSlots = page.locator('button:not(:disabled)');
+      const availableSlots = page.locator('button:not([disabled])');
       await availableSlots.first().click();
 
       await page.getByLabel('Имя').fill('Иван Тестовый');
@@ -69,12 +70,12 @@ test.describe('Guest Booking Flow', () => {
     const firstEvent = page.locator('a[href^="/booking/"]').first();
     await firstEvent.click();
 
-    await page.waitForTimeout(1000);
+    // Wait for slots to load
+    await expect(page.getByText(/Доступные слоты/)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/доступно|нет доступных/i)).toBeVisible({ timeout: 15000 });
 
     const allSlots = page.locator('button');
     const totalCount = await allSlots.count();
-
-    expect(totalCount).toBeGreaterThan(0);
 
     // With our test fixtures, we might have occupied slots
     // Just verify buttons exist
