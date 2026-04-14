@@ -38,7 +38,7 @@ test.describe('Guest Booking Flow', () => {
     await firstEvent.click();
 
     // Check we're on the booking page
-    await expect(page.getByText(/Длительность|Доступные слоты/)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Доступные слоты')).toBeVisible({ timeout: 10000 });
     await expect(page.locator('input[type="date"]')).toBeVisible();
 
     // Set tomorrow's date to ensure slots are available
@@ -60,7 +60,7 @@ test.describe('Guest Booking Flow', () => {
     await firstEvent.click();
 
     // Wait for booking page to load
-    await expect(page.getByText(/Длительность|Доступные слоты/)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Доступные слоты')).toBeVisible({ timeout: 10000 });
 
     // Set tomorrow's date to ensure slots are available
     await setDateAndWaitForSlots(page);
