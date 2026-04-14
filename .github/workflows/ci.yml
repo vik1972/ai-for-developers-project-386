@@ -124,27 +124,20 @@ jobs:
           RAILS_ENV: test
         run: bin/rails db:test:prepare db:seed
 
-      - name: Start Rails server
-        env:
-          RAILS_ENV: test
-        run: |
-          mkdir -p tmp/pids log
-          RAILS_ENV=test PIDFILE=tmp/pids/server.pid bundle exec rails server -p 3001 -b 0.0.0.0 -d
-          sleep 10
-          curl -s http://127.0.0.1:3001/api/public/events || echo "Rails not responding yet"
-          npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
-
-      - name: Start frontend and run E2E tests
+      - name: Start servers and run E2E tests
         working-directory: frontend
         run: |
-          # Start Vite dev server
+          # Start Rails server in background from root
+          (cd .. && RAILS_ENV=test bundle exec rails server -p 3001 -b 0.0.0.0 &) && \
+          npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000 && \
+          # Start frontend dev server
           npm run dev &
-          sleep 5
-          npx wait-on http://localhost:3000 --timeout 60000
-          
+          npx wait-on http://localhost:3000 --timeout 60000 && \
           # Run E2E tests
           npx playwright test
+        shell: bash
         env:
+          RAILS_ENV: test
           CI: true
 
       - name: Upload Playwright report
