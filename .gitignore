@@ -22,6 +22,7 @@ test-results/
 # IDE
 .idea/
 
-# Mailer previews (development only)
+# Mailer previews and tests (auto-generated)
 test/mailers/previews/
+test/mailers/*_test.rb
 
