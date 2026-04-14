@@ -128,10 +128,10 @@ jobs:
         env:
           RAILS_ENV: test
         run: |
-          mkdir -p tmp/pids
-          bundle exec rails server -p 3001 > /tmp/rails.log 2>&1 &
-          sleep 3
-          echo "Rails PID: $!"
+          # Use setsid to properly detach Rails from shell
+          setsid sh -c 'bundle exec rails server -p 3001' >/tmp/rails.log 2>&1 &
+          sleep 5
+          cat /tmp/rails.log || true
           npx wait-on http://localhost:3001/api/public/events --timeout 120000
 
       - name: Start frontend and run E2E tests
