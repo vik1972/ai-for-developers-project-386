@@ -127,8 +127,6 @@ jobs:
       - name: Start Rails server
         env:
           RAILS_ENV: test
-          # Dummy deploy hook to prevent Render integration from failing with 400
-          RENDER_DEPLOY_HOOK_URL: "https://httpbin.org/status/200"
         run: |
           # Use setsid to properly detach Rails from shell
           setsid sh -c 'bundle exec rails server -p 3001' >/tmp/rails.log 2>&1 &
