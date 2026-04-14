@@ -127,18 +127,24 @@ jobs:
       - name: Start Rails server
         env:
           RAILS_ENV: test
-          PIDFILE: /tmp/server.pid
         run: |
-          mkdir -p tmp/pids
-          bundle exec rails server -p 3001 -b 0.0.0.0 > /tmp/rails.log 2>&1 &
-          sleep 5
-          cat /tmp/rails.log || true
+          # Start Rails in background using nohup to prevent hangup
+          nohup bundle exec rails server -p 3001 -b 0.0.0.0 > /tmp/rails.log 2>&1 &
+          echo $! > /tmp/rails.pid
+          sleep 10
+          echo "=== Rails log ==="
+          cat /tmp/rails.log || echo "No log file yet"
+          echo "=== Checking if server is up ==="
+          curl -v http://127.0.0.1:3001/api/public/events || true
           npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
 
       - name: Start frontend dev server
         working-directory: frontend
         run: |
-          npx vite --host 127.0.0.1 --port 3000 &
+          nohup npx vite --host 127.0.0.1 --port 3000 > /tmp/vite.log 2>&1 &
+          echo $! > /tmp/vite.pid
+          sleep 5
+          cat /tmp/vite.log || true
           npx wait-on http://127.0.0.1:3000 --timeout 60000
 
       - name: Run Playwright E2E tests
@@ -146,6 +152,16 @@ jobs:
         run: npx playwright test
         env:
           CI: true
+
+      - name: Upload logs on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: server-logs
+          path: |
+            /tmp/rails.log
+            /tmp/vite.log
+          if-no-files-found: ignore
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
