@@ -12,11 +12,11 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     scope "public", as: nil do
-      get "/:slug", to: "public#owner_profile", constraints: { slug: /[^\/]+/ }
-      get "/:slug/events", to: "public#owner_events", constraints: { slug: /[^\/]+/ }
       get "events", to: "public#events"
       get "events/:id", to: "public#event"
       post "bookings", to: "public#create_booking"
+      get "/:slug", to: "public#owner_profile", constraints: { slug: /[^\/]+/ }
+      get "/:slug/events", to: "public#owner_events", constraints: { slug: /[^\/]+/ }
     end
 
     scope "owner", as: nil do
