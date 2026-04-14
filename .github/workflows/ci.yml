@@ -127,8 +127,12 @@ jobs:
       - name: Start Rails server
         env:
           RAILS_ENV: test
+          PIDFILE: /tmp/server.pid
         run: |
-          bundle exec rails server -p 3001 -b 0.0.0.0 &
+          mkdir -p tmp/pids
+          bundle exec rails server -p 3001 -b 0.0.0.0 > /tmp/rails.log 2>&1 &
+          sleep 5
+          cat /tmp/rails.log || true
           npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
 
       - name: Start frontend dev server
