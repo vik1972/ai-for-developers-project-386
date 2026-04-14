@@ -38,9 +38,29 @@ class Api::PublicController < ApplicationController
     @booking = Booking.new(booking_params)
 
     if @booking.save
+      # Send confirmation emails
+      send_booking_emails(@booking)
+
       render json: @booking, status: :created
     else
       render json: @booking.errors, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def send_booking_emails(booking)
+    return unless booking.guest_email.present?
+
+    begin
+      # Email to guest
+      BookingMailer.booking_created_guest(booking).deliver_later
+
+      # Email to owner
+      BookingMailer.booking_created_owner(booking).deliver_later
+    rescue => e
+      Rails.logger.error("Failed to send booking emails: #{e.message}")
+      # Don't fail the booking if email fails
     end
   end
 

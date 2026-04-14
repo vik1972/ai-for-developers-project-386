@@ -114,6 +114,16 @@ class Api::BookingsController < ApplicationController
   # POST /api/bookings/:id/cancel
   def cancel
     @booking.cancel!(params[:reason])
+
+    # Send cancellation email to guest
+    if @booking.guest_email.present?
+      begin
+        BookingMailer.booking_cancelled_guest(@booking).deliver_later
+      rescue => e
+        Rails.logger.error("Failed to send cancellation email: #{e.message}")
+      end
+    end
+
     render json: @booking
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
@@ -128,6 +138,16 @@ class Api::BookingsController < ApplicationController
     end
 
     @booking.reschedule!(new_slot)
+
+    # Send reschedule email to guest
+    if @booking.guest_email.present?
+      begin
+        BookingMailer.booking_rescheduled_guest(@booking).deliver_later
+      rescue => e
+        Rails.logger.error("Failed to send reschedule email: #{e.message}")
+      end
+    end
+
     render json: @booking
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity

@@ -3,6 +3,7 @@ class Owner < ApplicationRecord
   has_many :bookings, through: :events
   has_many :availability_schedules, dependent: :destroy
   has_many :availability_exceptions, dependent: :destroy
+  has_many :calendar_integrations, dependent: :destroy
 
   validates :slug, uniqueness: true, allow_blank: true
   validates :email, presence: true

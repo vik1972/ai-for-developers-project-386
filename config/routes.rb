@@ -38,6 +38,14 @@ Rails.application.routes.draw do
       delete "availability/exceptions/:id", to: "availability#delete_exception"
 
       get "availability/preview", to: "availability#preview"
+
+      # Integrations routes (Google Calendar, Zoom)
+      get "integrations", to: "integrations#index"
+      get "integrations/:id", to: "integrations#show"
+      post "integrations/connect", to: "integrations#connect"
+      delete "integrations/:id", to: "integrations#destroy"
+      post "integrations/:id/sync", to: "integrations#sync"
+      post "integrations/oauth_callback", to: "integrations#oauth_callback"
     end
 
     resources :events, only: [ :index, :show, :create, :destroy ]

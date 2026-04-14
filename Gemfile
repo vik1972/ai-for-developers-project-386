@@ -54,6 +54,23 @@ end
 
 gem "rack-cors", "~> 2.0"
 
+# Email sending
+gem "sendgrid-ruby", "~> 6.0"
+
+# Background jobs
+# gem "solid_queue", "~> 1.0"
+
+# OAuth for Google/Zoom
+# gem "omniauth-google-oauth2", "~> 1.2"
+# gem "omniauth-zoom", "~> 0.1"
+# gem "omniauth-rails_csrf_protection", "~> 1.0"
+
+# Google Calendar API
+# gem "google-apis-calendar_v3", "~> 0.40"
+
+# HTTP client for API calls
+# gem "httparty", "~> 0.22"
+
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
