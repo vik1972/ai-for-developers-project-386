@@ -124,20 +124,27 @@ jobs:
           RAILS_ENV: test
         run: bin/rails db:test:prepare db:seed
 
+      - name: Create required directories
+        run: mkdir -p tmp/pids log
+
       - name: Start Rails server
         env:
           RAILS_ENV: test
+          PIDFILE: tmp/pids/server.pid
         run: |
           # Start Rails in background
           nohup bundle exec rails server -p 3001 -b 0.0.0.0 > rails.log 2>&1 &
           echo $! > rails.pid
           sleep 8
-          echo "=== Rails log (first 100 lines) ==="
-          head -100 rails.log || echo "No log file"
+          echo "=== Rails log (first 50 lines) ==="
+          head -50 rails.log || echo "No log file"
+          echo "=== Directory check ==="
+          ls -la tmp/pids/ 2>/dev/null || echo "No tmp/pids"
+          echo "=== Process check ==="
+          ps aux | grep ruby | grep -v grep || echo "No ruby processes"
           echo "=== Checking if server is up ==="
-          curl -s http://127.0.0.1:3001/api/public/events || echo "Server not responding yet"
+          curl -s http://127.0.0.1:3001/api/public/events || echo "Server not responding"
           npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
-        continue-on-error: false
 
       - name: Start frontend dev server
         working-directory: frontend
