@@ -1,6 +1,27 @@
+# Temporary files
 tmp/cache/
 tmp/
 log/
+
+# Databases
 storage/*.sqlite3*
+
+# Node modules
+node_modules/
+frontend/node_modules/
 typespec/node_modules/
+
+# Build output
+frontend/dist/
+
+# Test results
+frontend/playwright-report/
+frontend/test-results/
+test-results/
+
+# IDE
+.idea/
+
+# Mailer previews (development only)
+test/mailers/previews/
 
