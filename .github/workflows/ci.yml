@@ -119,25 +119,23 @@ jobs:
         working-directory: frontend
         run: npx playwright install --with-deps chromium
 
-      - name: Prepare test database
+      - name: Prepare test database and start Rails
         env:
           RAILS_ENV: test
-        run: bin/rails db:test:prepare db:seed
+        run: |
+          bin/rails db:test:prepare db:seed
+          bundle exec rails server -p 3001 &
+          npx wait-on http://localhost:3001/api/public/events --timeout 60000
 
-      - name: Start servers and run E2E tests
+      - name: Run Playwright E2E tests
         working-directory: frontend
         run: |
-          # Start Rails server in background from root
-          (cd .. && RAILS_ENV=test bundle exec rails server -p 3001 -b 0.0.0.0 &) && \
-          npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000 && \
-          # Start frontend dev server
+          # Start Vite dev server in background
           npm run dev &
-          npx wait-on http://localhost:3000 --timeout 60000 && \
-          # Run E2E tests
+          npx wait-on http://localhost:3000 --timeout 60000
+          # Run tests
           npx playwright test
-        shell: bash
         env:
-          RAILS_ENV: test
           CI: true
 
       - name: Upload Playwright report
