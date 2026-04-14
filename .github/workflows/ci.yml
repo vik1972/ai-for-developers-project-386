@@ -124,51 +124,28 @@ jobs:
           RAILS_ENV: test
         run: bin/rails db:test:prepare db:seed
 
-      - name: Create required directories
-        run: mkdir -p tmp/pids log
-
       - name: Start Rails server
         env:
           RAILS_ENV: test
-          PIDFILE: tmp/pids/server.pid
         run: |
-          # Start Rails in background
-          nohup bundle exec rails server -p 3001 -b 0.0.0.0 > rails.log 2>&1 &
-          echo $! > rails.pid
-          sleep 8
-          echo "=== Rails log (first 50 lines) ==="
-          head -50 rails.log || echo "No log file"
-          echo "=== Directory check ==="
-          ls -la tmp/pids/ 2>/dev/null || echo "No tmp/pids"
-          echo "=== Process check ==="
-          ps aux | grep ruby | grep -v grep || echo "No ruby processes"
-          echo "=== Checking if server is up ==="
-          curl -s http://127.0.0.1:3001/api/public/events || echo "Server not responding"
+          mkdir -p tmp/pids log
+          RAILS_ENV=test PIDFILE=tmp/pids/server.pid bundle exec rails server -p 3001 -b 0.0.0.0 -d
+          sleep 10
+          curl -s http://127.0.0.1:3001/api/public/events || echo "Rails not responding yet"
           npx wait-on http://127.0.0.1:3001/api/public/events --timeout 60000
 
-      - name: Start frontend dev server
+      - name: Start frontend and run E2E tests
         working-directory: frontend
         run: |
-          nohup npx vite --host 127.0.0.1 --port 3000 > vite.log 2>&1 &
-          echo $! > vite.pid
+          # Start Vite dev server
+          npm run dev &
           sleep 5
-          cat vite.log || echo "No vite log"
-          npx wait-on http://127.0.0.1:3000 --timeout 60000
-
-      - name: Run Playwright E2E tests
-        working-directory: frontend
-        run: npx playwright test
+          npx wait-on http://localhost:3000 --timeout 60000
+          
+          # Run E2E tests
+          npx playwright test
         env:
           CI: true
-
-      - name: Upload server logs
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: server-logs
-          path: |
-            rails.log
-            frontend/vite.log
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
