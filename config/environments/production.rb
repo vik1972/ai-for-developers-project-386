@@ -99,5 +99,6 @@ Rails.application.configure do
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts << /.*\.onrender\.com/
   config.hosts << "localhost"
+  config.hosts << "calendar.test"
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
