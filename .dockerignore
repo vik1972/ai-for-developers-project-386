@@ -12,8 +12,8 @@
 !/.env*.erb
 
 # Ignore all default key files.
-/config/master.key
-/config/credentials/*.key
+# /config/master.key  # Committed for production Docker builds
+# /config/credentials/*.key
 
 # Ignore all logfiles and tempfiles.
 /log/*

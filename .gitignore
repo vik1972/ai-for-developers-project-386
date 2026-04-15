@@ -4,6 +4,7 @@ tmp/
 log/
 
 # Databases
+storage/
 storage/*.sqlite3*
 
 # Node modules
