@@ -20,10 +20,7 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Production uses PostgreSQL via DATABASE_URL from Render
+# Production uses SQLite (compatible with Docker)
 production:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV["DATABASE_URL"] %>
-  prepared_statements: false
+  <<: *default
+  database: storage/production.sqlite3
