@@ -1,25 +1,25 @@
-# Project Improvements
+# Улучшения проекта
 
-## 1. Email Notifications
-- Booking confirmation (guest + owner)
-- Reminder 24h before meeting
-- Cancellation/reschedule notification
+## 1. Email-уведомления
+- Подтверждение бронирования (гость + владелец)
+- Напоминание за 24ч до встречи
+- Уведомление об отмене/переносе
 
-## 2. Integrations
-- Google Calendar — event sync
-- Zoom/Google Meet — auto-generate links for online meetings
+## 2. Интеграции
+- Google Calendar — синхронизация событий
+- Zoom/Google Meet — автоматическая генерация ссылок для онлайн-встреч
 
-## 3. Security
-- Owner authentication for dashboard
-- Rate limiting API
-- API versioning
+## 3. Безопасность
+- Аутентификация владельца для дашборда
+- Ограничение частоты запросов API
+- Версионирование API
 
 ## 4. UX
-- Public link for guests (cancel/reschedule)
-- Guest timezone selection
-- Calendar view in dashboard
+- Публичная ссылка для гостей (отмена/перенос)
+- Выбор часового пояса гостем
+- Календарное представление в дашборде
 
-## 5. Backend
-- Available slots caching
-- Background jobs for emails
-- Database indexes for queries
+## 5. Бэкенд
+- Кэширование доступных слотов
+- Фоновые задания для email
+- Индексы базы данных для запросов
